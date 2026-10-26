@@ -23812,9 +23812,219 @@
     
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; img-src 'self' data:; media-src 'self' blob:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
     <link rel="stylesheet" href="replica.css">
+<style>
+    body.brochure-popup-open {
+        overflow: hidden;
+    }
+
+    .brochure-popup[hidden] {
+        display: none;
+    }
+
+    .brochure-popup {
+        position: fixed;
+        inset: 0;
+        z-index: 1000000;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        font-family: Montserrat, Arial, sans-serif;
+    }
+
+    .brochure-popup__backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(15, 14, 9, .72);
+        backdrop-filter: blur(5px);
+    }
+
+    .brochure-popup__panel {
+        position: relative;
+        width: min(100%, 440px);
+        overflow: hidden;
+        border: 1px solid rgba(212, 184, 109, .55);
+        border-radius: 18px;
+        background: #fffdf8;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, .34);
+        animation: brochurePopupIn .38s ease-out both;
+    }
+
+    .brochure-popup__accent {
+        height: 6px;
+        background: linear-gradient(90deg, #75632a, #d6bd78, #75632a);
+    }
+
+    .brochure-popup__content {
+        padding: 34px 36px 32px;
+    }
+
+    .brochure-popup__close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        border: 0;
+        border-radius: 50%;
+        background: #f0ebdf;
+        color: #413819;
+        font-size: 25px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .brochure-popup__eyebrow {
+        margin: 0 0 8px;
+        color: #887334;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .brochure-popup__title {
+        margin: 0;
+        color: #25200f;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: clamp(30px, 6vw, 40px);
+        font-weight: 500;
+        line-height: 1.1;
+    }
+
+    .brochure-popup__intro {
+        margin: 12px 0 24px;
+        color: #625c4e;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .brochure-popup__field {
+        display: block;
+        margin-bottom: 16px;
+    }
+
+    .brochure-popup__field span {
+        display: block;
+        margin-bottom: 7px;
+        color: #373224;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .brochure-popup__field input {
+        width: 100%;
+        height: 50px;
+        box-sizing: border-box;
+        border: 1px solid #d8d1c1;
+        border-radius: 9px;
+        background: #fff;
+        color: #272319;
+        font: inherit;
+        padding: 0 14px;
+        outline: none;
+        transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .brochure-popup__field input:focus {
+        border-color: #927d3e;
+        box-shadow: 0 0 0 3px rgba(146, 125, 62, .14);
+    }
+
+    .brochure-popup__error {
+        min-height: 18px;
+        margin: -3px 0 10px;
+        color: #a22929;
+        font-size: 12px;
+    }
+
+    .brochure-popup__submit {
+        width: 100%;
+        min-height: 51px;
+        border: 0;
+        border-radius: 9px;
+        background: linear-gradient(135deg, #75632a, #9d8744);
+        color: #fff;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: .5px;
+        cursor: pointer;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .brochure-popup__submit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(117, 99, 42, .28);
+    }
+
+    .brochure-popup__status {
+        display: none;
+        margin: 0;
+        padding: 26px 8px 14px;
+        color: #4f451f;
+        font-size: 16px;
+        line-height: 1.6;
+        text-align: center;
+    }
+
+    .brochure-popup.is-complete .brochure-popup__form,
+    .brochure-popup.is-complete .brochure-popup__intro {
+        display: none;
+    }
+
+    .brochure-popup.is-complete .brochure-popup__status {
+        display: block;
+    }
+
+    @keyframes brochurePopupIn {
+        from { opacity: 0; transform: translateY(20px) scale(.97); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 520px) {
+        .brochure-popup {
+            padding: 14px;
+        }
+
+        .brochure-popup__content {
+            padding: 30px 22px 24px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .brochure-popup__panel {
+            animation: none;
+        }
+    }
+</style>
 </head>
 
 <body id="top">
+    <div class="brochure-popup" id="brochure-popup" role="dialog" aria-modal="true" aria-labelledby="brochure-popup-title" hidden>
+        <div class="brochure-popup__backdrop" data-brochure-close></div>
+        <section class="brochure-popup__panel" aria-describedby="brochure-popup-intro">
+            <div class="brochure-popup__accent"></div>
+            <button class="brochure-popup__close" type="button" aria-label="Close brochure form" data-brochure-close>&times;</button>
+            <div class="brochure-popup__content">
+                <p class="brochure-popup__eyebrow">Ivory County</p>
+                <h2 class="brochure-popup__title" id="brochure-popup-title">Download Brochure</h2>
+                <p class="brochure-popup__intro" id="brochure-popup-intro">Please enter your details to request the project brochure.</p>
+                <form class="brochure-popup__form" id="brochure-download-form" novalidate>
+                    <label class="brochure-popup__field">
+                        <span>Name</span>
+                        <input id="brochure-name" name="name" type="text" autocomplete="name" placeholder="Enter your name" required>
+                    </label>
+                    <label class="brochure-popup__field">
+                        <span>Phone Number</span>
+                        <input id="brochure-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Enter your phone number" maxlength="18" required>
+                    </label>
+                    <p class="brochure-popup__error" id="brochure-form-error" role="alert" aria-live="polite"></p>
+                    <button class="brochure-popup__submit" type="submit">Download Brochure</button>
+                </form>
+                <p class="brochure-popup__status" id="brochure-form-status" role="status">Thank you. Your brochure request has been received.</p>
+            </div>
+        </section>
+    </div>
     <!-- Google Tag Manager(noscript)-->
     
     <!-- End Google Tag Manager(noscript)-->
