@@ -17,7 +17,7 @@
     message.setAttribute('role', 'status');
     message.textContent = missing
       ? 'Please complete your name, mobile number and e-mail.'
-      : 'Thank you for showing your interest. We will get back to you very soon.';
+      : 'Thank you. This independent site does not transmit your form data.';
     form.appendChild(message);
 
     if (!missing) form.reset();
