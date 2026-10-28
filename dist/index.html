@@ -24066,11 +24066,36 @@
     .partner-disclosure {
         position: relative;
         z-index: 999;
-        padding: 10px 18px;
+        overflow: hidden;
         background: #292414;
         color: #fff;
-        font: 500 12px/1.55 Montserrat, Arial, sans-serif;
-        text-align: center;
+        font: 500 10px/1.4 Montserrat, Arial, sans-serif;
+        text-align: left;
+    }
+
+    .partner-disclosure__viewport {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .partner-disclosure__track {
+        display: flex;
+        width: max-content;
+        will-change: transform;
+        animation: partner-disclosure-scroll 32s linear infinite;
+    }
+
+    .partner-disclosure:hover .partner-disclosure__track,
+    .partner-disclosure:focus-within .partner-disclosure__track {
+        animation-play-state: paused;
+    }
+
+    .partner-disclosure__item {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        padding: 7px 52px 7px 0;
+        white-space: nowrap;
     }
 
     .partner-disclosure strong {
@@ -24093,8 +24118,32 @@
     .partner-disclosure__actions {
         display: inline-flex;
         gap: 12px;
-        margin-left: 12px;
+        margin-left: 14px;
         white-space: nowrap;
+    }
+
+    @keyframes partner-disclosure-scroll {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .partner-disclosure__viewport {
+            overflow-x: auto;
+        }
+
+        .partner-disclosure__track {
+            animation: none;
+        }
+
+        .partner-disclosure__item[aria-hidden="true"] {
+            display: none;
+        }
     }
 
     .compliance-info {
@@ -24321,10 +24370,13 @@
             display: none;
         }
 
-        .partner-disclosure__actions {
-            display: flex;
-            justify-content: center;
-            margin: 7px 0 0;
+        .partner-disclosure {
+            font-size: 9px;
+        }
+
+        .partner-disclosure__item {
+            padding-top: 6px;
+            padding-bottom: 6px;
         }
 
         .compliance-info {
@@ -24397,8 +24449,18 @@
         <span class="whatsapp-float__label">Chat on WhatsApp</span>
     </a>
     <aside class="partner-disclosure" aria-label="Website ownership disclosure">
-        <strong>Independent channel-partner website:</strong> Operated by Agarwal &amp; Gehlot Realtors (OPC) Pvt Ltd, an authorised channel partner. This is not the developer's official website.
-        <span class="partner-disclosure__actions"><a href="tel:+919654322224">Call +91 96543 22224</a><button type="button" data-brochure-open>Request information</button><a href="#about-partner">About the partner</a></span>
+        <div class="partner-disclosure__viewport">
+            <div class="partner-disclosure__track">
+                <div class="partner-disclosure__item">
+                    <span><strong>Independent channel-partner website:</strong> Operated by Agarwal &amp; Gehlot Realtors (OPC) Pvt Ltd, an authorised channel partner. This is not the developer's official website.</span>
+                    <span class="partner-disclosure__actions"><a href="tel:+919654322224">Call +91 96543 22224</a><button type="button" data-brochure-open>Request information</button><a href="#about-partner">About the partner</a></span>
+                </div>
+                <div class="partner-disclosure__item" aria-hidden="true">
+                    <span><strong>Independent channel-partner website:</strong> Operated by Agarwal &amp; Gehlot Realtors (OPC) Pvt Ltd, an authorised channel partner. This is not the developer's official website.</span>
+                    <span class="partner-disclosure__actions"><a href="tel:+919654322224" tabindex="-1">Call +91 96543 22224</a><button type="button" data-brochure-open tabindex="-1">Request information</button><a href="#about-partner" tabindex="-1">About the partner</a></span>
+                </div>
+            </div>
+        </div>
     </aside>
     <!-- Google Tag Manager(noscript)-->
     
