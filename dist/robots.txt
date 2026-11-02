@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ivory-county-replica.neatwasp7.chatgpt.site/sitemap.xml
+Sitemap: https://ivory-iota-five.vercel.app/sitemap.xml
